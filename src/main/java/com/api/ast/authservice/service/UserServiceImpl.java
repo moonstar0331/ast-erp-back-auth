@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         try {
             userMapper.insert(user);
         } catch (Exception e) {
-            throw new AuthServiceException(ErrorCode.PROFILE_CREATION_ERROR);
+            throw new AuthServiceException(ErrorCode.USER_CREATION_ERROR);
         }
     }
 
@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
             user.changeDeleted(true);
             userMapper.insert(user);
         } catch (Exception e) {
-            throw new AuthServiceException(ErrorCode.PROFILE_DELETE_ERROR);
+            throw new AuthServiceException(ErrorCode.USER_DELETE_ERROR);
         }
 
     }

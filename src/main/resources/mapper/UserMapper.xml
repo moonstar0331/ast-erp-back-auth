@@ -8,6 +8,7 @@
     <resultMap id="UserResultMap" type="com.api.ast.authservice.entity.User">
         <id property="userId" column="user_id"/>
         <result property="email" column="email"/>
+        <result property="password" column="password"/>
         <result property="passwordHash" column="password_hash"/>
         <result property="deptId" column="dept_id"/>
         <result property="name" column="name"/>
@@ -19,49 +20,43 @@
         <result property="userUuid" column="user_uuid"/>
         <result property="role" column="role" jdbcType="VARCHAR" javaType="com.api.ast.authservice.entity.constant.UserRole"/>
         <result property="createdAt" column="created_at"/>
-        <result property="modifiedAt" column="modified_at"/>
+        <result property="modifiedAt" column="updated_at"/>
         <result property="deletedYn" column="deleted_yn"/>
     </resultMap>
 
     <select id="findByUserUuid" resultMap="UserResultMap">
-        SELECT * FROM users WHERE user_uuid = #{userUuid} AND is_deleted = false AND activated = true
+        SELECT * FROM users WHERE user_uuid = #{userUuid} AND deleted_yn = false
     </select>
 
     <select id="findByEmail" resultMap="UserResultMap">
-        SELECT * FROM users WHERE email = #{email} AND is_deleted = false AND activated = true
+        SELECT * FROM users WHERE email = #{email} AND deleted_yn = false
     </select>
 
     <select id="findById" resultMap="UserResultMap">
-        SELECT * FROM users WHERE user_id = #{userId} AND is_deleted = false AND activated = true
+        SELECT * FROM users WHERE user_id = #{userId} AND deleted_yn = false
     </select>
 
     <select id="findAll" resultMap="UserResultMap">
-        SELECT * FROM users WHERE is_deleted = false AND activated = true ORDER BY created_at DESC
+        SELECT * FROM users WHERE deleted_yn = false ORDER BY created_at DESC
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="user.userId" keyColumn="user_id">
-        INSERT INTO users(email, password, password_hash, user_uuid, deleted_yn, role, created_at, modified_at)
-        VALUES(#{user.email}, #{user.password}, #{user.passwordHash}, #{user.userUuid}, #{user.deletedYn}, CAST(#{user.role} AS TEXT), NOW(), NOW())
+        INSERT INTO users(email, name, phone, password, password_hash, user_uuid, deleted_yn, role_code, status_code, created_at, updated_at)
+        VALUES(#{user.email}, #{user.name}, #{user.phone}, #{user.password}, #{user.passwordHash}, #{user.userUuid}, #{user.deletedYn}, CAST(#{user.role} AS TEXT), 'ACTIVE', NOW(), NOW())
     </insert>
 
     <update id="update">
         UPDATE users SET
         email = #{user.email},
         password = #{user.password},
-        nickname = #{user.nickname},
-        activated = #{user.activated},
-        is_deleted = #{user.isDeleted},
-        role = CAST(#{user.role} AS TEXT),
-        modified_at = NOW()
+        deleted_yn = #{user.isDeleted},
+        role_code = CAST(#{user.role} AS TEXT),
+        updated_at = NOW()
         WHERE user_id = #{user.userId}
     </update>
 
-    <!--
-        JpaRepository's deleteById is implemented as a logical delete
-        by updating the is_deleted flag to true, matching the @Where clause logic in the User entity.
-    -->
     <update id="deleteById">
-        UPDATE users SET is_deleted = true, modified_at = NOW() WHERE user_id = #{userId}
+        UPDATE users SET deleted_yn = true, updated_at = NOW() WHERE user_id = #{userId}
     </update>
 
 </mapper>

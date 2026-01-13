@@ -44,6 +44,9 @@ public class User extends AuditingFields {
     @Column(name = "phone", length = 20)
     private String phone;
 
+    @Column(name = "user_uuid")
+    private String userUuid;
+
     @Column(name = "role_code")
     private String roleCode;
 
@@ -55,9 +58,6 @@ public class User extends AuditingFields {
 
     @Column(name = "joined_date")
     private String joinedDate;
-
-    @Column(name = "user_uuid")
-    private String userUuid;
 
     @Column(name = "deleted_yn", columnDefinition = "boolean default false NOT NULL")
     private boolean deletedYn;
