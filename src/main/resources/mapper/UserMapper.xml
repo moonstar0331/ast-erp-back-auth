@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.ast.authservice.mapper.UserMapper">
+
+    <resultMap id="UserResultMap" type="com.api.ast.authservice.entity.User">
+        <id property="userId" column="user_id"/>
+        <result property="email" column="email"/>
+        <result property="passwordHash" column="password_hash"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="roleCode" column="role_code"/>
+        <result property="statusCode" column="status_code"/>
+        <result property="birthDate" column="birth_date"/>
+        <result property="joinedDate" column="joined_date"/>
+        <result property="userUuid" column="user_uuid"/>
+        <result property="role" column="role" jdbcType="VARCHAR" javaType="com.api.ast.authservice.entity.constant.UserRole"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="modifiedAt" column="modified_at"/>
+        <result property="deletedYn" column="deleted_yn"/>
+    </resultMap>
+
+    <select id="findByUserUuid" resultMap="UserResultMap">
+        SELECT * FROM users WHERE user_uuid = #{userUuid} AND is_deleted = false AND activated = true
+    </select>
+
+    <select id="findByEmail" resultMap="UserResultMap">
+        SELECT * FROM users WHERE email = #{email} AND is_deleted = false AND activated = true
+    </select>
+
+    <select id="findById" resultMap="UserResultMap">
+        SELECT * FROM users WHERE user_id = #{userId} AND is_deleted = false AND activated = true
+    </select>
+
+    <select id="findAll" resultMap="UserResultMap">
+        SELECT * FROM users WHERE is_deleted = false AND activated = true ORDER BY created_at DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="user.userId" keyColumn="user_id">
+        INSERT INTO users(email, password, password_hash, user_uuid, deleted_yn, role, created_at, modified_at)
+        VALUES(#{user.email}, #{user.password}, #{user.passwordHash}, #{user.userUuid}, #{user.deletedYn}, CAST(#{user.role} AS TEXT), NOW(), NOW())
+    </insert>
+
+    <update id="update">
+        UPDATE users SET
+        email = #{user.email},
+        password = #{user.password},
+        nickname = #{user.nickname},
+        activated = #{user.activated},
+        is_deleted = #{user.isDeleted},
+        role = CAST(#{user.role} AS TEXT),
+        modified_at = NOW()
+        WHERE user_id = #{user.userId}
+    </update>
+
+    <!--
+        JpaRepository's deleteById is implemented as a logical delete
+        by updating the is_deleted flag to true, matching the @Where clause logic in the User entity.
+    -->
+    <update id="deleteById">
+        UPDATE users SET is_deleted = true, modified_at = NOW() WHERE user_id = #{userId}
+    </update>
+
+</mapper>

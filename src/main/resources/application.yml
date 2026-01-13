@@ -1,0 +1,66 @@
+server:
+  port: 8080
+
+spring:
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          github:
+#            client-id: e67ba6052e23676fbc3d
+#            client-secret: d2a204d51d9c7d024eaabd16a29542177ed85922
+  application:
+    name: auth-service
+  config:
+    activate:
+      on-profile: default
+  h2:
+    console:
+      enabled: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/ast
+    username: postgres
+    password: postgres
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    properties:
+#      hibernate:
+#        format_sql: true
+#        show_sql: true
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  redis:
+    port: 6379
+    host: 127.0.0.1
+
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+  type-aliases-package: com.api.ast
+  configuration:
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: NULL
+
+#jwt:
+#  header: Authorization
+#  secret: Z29vcm10aG9uLWRvY2tlci1wcm9qZWN0LWF1dGgtc2VydmljZS1qd3QtYXV0aG9yaXphdGlvbi1rZXktZ29vcm10aG9kLWRvY2tlci1wcm9qZWN0LWF1dGgtc2VydmljZQo=
+#  access-token-validity-in-seconds: 1800 # 초 단위
+#  refresh-token-validity-in-seconds: 604800
+
+logging:
+  level:
+    com.api.ast: DEBUG
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+github:
+  client-id: 73750e75473dea445e0b
+  client-secret: 504dc736c26de3cd6febfe257b5293b30285f44f
+  redirect-uri: http://aff0c8aebd5c142cebf9728a7b6b9fe7-79b29e8561486b51.elb.ap-northeast-2.amazonaws.com/auth/github/callback
