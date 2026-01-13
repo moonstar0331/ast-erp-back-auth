@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Where(clause = "is_deleted=false and activated=true")
+@Where(clause = "deleted_yn=false")
 public class User extends AuditingFields {
 
     @JsonIgnore
@@ -32,9 +32,6 @@ public class User extends AuditingFields {
     @Column(name = "password", length = 100)
     private String password;
 
-    @Column(name = "password_hash")
-    private String passwordHash;
-
     @Column(name = "dept_id")
     private String deptId;
 
@@ -46,9 +43,6 @@ public class User extends AuditingFields {
 
     @Column(name = "user_uuid")
     private String userUuid;
-
-    @Column(name = "role_code")
-    private String roleCode;
 
     @Column(name = "status_code")
     private String statusCode;
