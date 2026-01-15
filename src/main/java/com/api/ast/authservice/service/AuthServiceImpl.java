@@ -5,8 +5,8 @@ import com.api.ast.authservice.entity.User;
 import com.api.ast.authservice.exception.AuthServiceException;
 import com.api.ast.authservice.exception.ErrorCode;
 import com.api.ast.authservice.jwt.TokenProvider;
+import com.api.ast.authservice.mapper.UserMapper;
 import com.api.ast.authservice.redis.RedisUtil;
-import com.api.ast.authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisUtil redisUtil;
-    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public TokenDto authorize(String email, String password) {
@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean validateCheck(String email, String userUuid) {
-        User user = userRepository.findByEmail(email).orElseThrow(() ->
+        User user = userMapper.findByEmail(email).orElseThrow(() ->
                 new AuthServiceException(ErrorCode.USER_NOT_FOUND));
 
         if (!user.getUserUuid().equals(userUuid)) {

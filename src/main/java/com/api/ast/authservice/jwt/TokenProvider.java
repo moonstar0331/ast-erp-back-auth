@@ -4,8 +4,8 @@ import com.api.ast.authservice.dto.TokenDto;
 import com.api.ast.authservice.entity.User;
 import com.api.ast.authservice.exception.AuthServiceException;
 import com.api.ast.authservice.exception.ErrorCode;
+import com.api.ast.authservice.mapper.UserMapper;
 import com.api.ast.authservice.redis.RedisUtil;
-import com.api.ast.authservice.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -37,18 +37,18 @@ public class TokenProvider implements InitializingBean {
 
     private Key key;
 
-    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public TokenProvider(
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.access-token-validity-in-seconds}") long accessTokenValidityInSeconds,
             @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInSeconds,
-            UserRepository userRepository,
+            UserMapper userMapper,
             RedisUtil redisUtil) {
         this.secret = secret;
         this.accessTokenValidityInMilliseconds = accessTokenValidityInSeconds * 1000;
         this.refreshTokenValidityInMilliseconds = refreshTokenValidityInSeconds * 1000;
-        this.userRepository = userRepository;
+        this.userMapper = userMapper;
         this.redisUtil = redisUtil;
     }
 
@@ -62,7 +62,7 @@ public class TokenProvider implements InitializingBean {
     public TokenDto createToken(String email, String authorities) {
 
         long now = (new Date()).getTime();
-        User user = userRepository.findByEmail(email) // princial.toSTring()
+        User user = userMapper.findByEmail(email) // princial.toSTring()
                 .orElseThrow(() -> new AuthServiceException(ErrorCode.USER_NOT_FOUND));
 
         String accessToken = Jwts.builder()

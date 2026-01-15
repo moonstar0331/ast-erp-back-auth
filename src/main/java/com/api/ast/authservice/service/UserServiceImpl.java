@@ -8,7 +8,6 @@ import com.api.ast.authservice.exception.ErrorCode;
 import com.api.ast.authservice.mapper.UserMapper;
 import com.api.ast.authservice.openfeign.ProfileServiceClient;
 import com.api.ast.authservice.openfeign.vo.reqeust.ProfileCreateReqeust;
-import com.api.ast.authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -25,7 +24,6 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
-    // private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final ProfileServiceClient profileServiceClient;
@@ -33,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void join(UserDto userDto) {
-        if(userMapper.findByEmail(userDto.getEmail()).orElse(null) != null) {
+        if(userMapper.existsByEmail(userDto.getEmail()) > 0) {
             throw new AuthServiceException(ErrorCode.DUPLICATED_USER_EMAIL);
         }
 
@@ -96,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
         user.modifyUserInfo(passwordEncoder.encode(password));
 
-        userMapper.insert(user);
+        userMapper.update(user);
     }
 
     @Override
@@ -113,7 +111,7 @@ public class UserServiceImpl implements UserService {
             profileServiceClient.deleteMeProfile(user.getUserUuid());
 
             user.changeDeleted(true);
-            userMapper.insert(user);
+            userMapper.update(user);
         } catch (Exception e) {
             throw new AuthServiceException(ErrorCode.USER_DELETE_ERROR);
         }
