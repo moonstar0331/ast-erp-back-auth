@@ -6,7 +6,6 @@ import com.api.ast.authservice.entity.constant.UserRole;
 import com.api.ast.authservice.exception.AuthServiceException;
 import com.api.ast.authservice.exception.ErrorCode;
 import com.api.ast.authservice.mapper.UserMapper;
-import com.api.ast.authservice.openfeign.ProfileServiceClient;
 import com.api.ast.authservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final ProfileServiceClient profileServiceClient;
 
     @Override
     @Transactional
@@ -108,8 +106,6 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            profileServiceClient.deleteMeProfile(user.getUserUuid());
-
             user.changeDeleted(true);
             userMapper.update(user);
         } catch (Exception e) {
