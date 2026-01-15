@@ -99,7 +99,17 @@ public class DepartmentController {
 
     // 부서 단건 삭제
     @DeleteMapping("/{deptId}")
+    public ResponseEntity<Void> deleteOne(@PathVariable Long deptId) {
+        departmentService.deleteOne(deptId);
+
+        return ResponseEntity.ok().build();
+    }
 
     // 부서 다건 삭제
     @DeleteMapping("/list")
+    public ResponseEntity<Void> deleteMany(@RequestBody List<Long> deptIds) {
+        departmentService.deleteMany(deptIds);
+
+        return ResponseEntity.ok().build();
+    }
 }

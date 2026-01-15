@@ -82,4 +82,22 @@
             WHERE dept_id = #{dto.deptId}
         </foreach>
     </update>
+
+    <update id="deleteOne">
+        UPDATE department
+        SET
+            deleted_yn = true,
+            updated_at = NOW()
+        WHERE dept_id = #{deptId}
+    </update>
+
+    <update id="deleteMany">
+        <foreach collection="deptIds" item="deptId" index="index" separator=";">
+                UPDATE department
+            SET
+                deleted_yn = true,
+                updated_at = NOW()
+            WHERE dept_id = #{deptId}
+        </foreach>
+    </update>
 </mapper>

@@ -15,4 +15,8 @@ public interface DepartmentService {
     DepartmentDto updateOne(DepartmentDto dto);
 
     List<DepartmentDto> updateMany(List<DepartmentDto> dtoList);
+
+    void deleteOne(Long deptId);
+
+    void deleteMany(List<Long> deptIds);
 }

@@ -62,4 +62,24 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         return dtoList;
     }
+
+    @Override
+    @Transactional
+    public void deleteOne(Long deptId) {
+        try {
+            departmentMapper.deleteOne(deptId);
+        } catch (Exception e) {
+            throw new AuthServiceException(ErrorCode.INTERNAL_DELETE_ERROR);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteMany(List<Long> deptIds) {
+        try {
+            departmentMapper.deleteMany(deptIds);
+        } catch (Exception e) {
+            throw new AuthServiceException(ErrorCode.INTERNAL_DELETE_ERROR);
+        }
+    }
 }

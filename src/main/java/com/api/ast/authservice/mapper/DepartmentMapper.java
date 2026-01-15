@@ -17,4 +17,8 @@ public interface DepartmentMapper {
     int updateOne(DepartmentDto dto);
 
     int updateMany(List<DepartmentDto> dtoList);
+
+    void deleteOne(Long deptId);
+
+    void deleteMany(List<Long> deptIds);
 }
