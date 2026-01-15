@@ -68,4 +68,18 @@
             deleted_yn = #{dto.deletedYn}
         WHERE dept_id = #{dto.deptId}
     </update>
+
+    <update id="updateMany">
+        <foreach collection="dtoList" item="dto" index="index" separator=";">
+            UPDATE department
+            SET
+                parent_dept_id = #{dto.parentDeptId},
+                dept_name = #{dto.deptName},
+                dept_type_code = #{dto.deptTypeCode},
+                use_yn = #{dto.useYn},
+                updated_at = NOW(),
+                deleted_yn = #{dto.deletedYn}
+            WHERE dept_id = #{dto.deptId}
+        </foreach>
+    </update>
 </mapper>

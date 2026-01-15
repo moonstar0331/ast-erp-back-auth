@@ -15,4 +15,6 @@ public interface DepartmentMapper {
     List<DepartmentDto> selectAll();
 
     int updateOne(DepartmentDto dto);
+
+    int updateMany(List<DepartmentDto> dtoList);
 }

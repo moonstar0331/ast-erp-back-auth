@@ -3,6 +3,7 @@ package com.api.ast.authservice.controller;
 import com.api.ast.authservice.dto.department.DepartmentDto;
 import com.api.ast.authservice.service.DepartmentService;
 import com.api.ast.authservice.vo.request.department.DepartmentCreateRequest;
+import com.api.ast.authservice.vo.request.department.DepartmentUpdateRequest;
 import com.api.ast.authservice.vo.response.department.DepartmentResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -78,6 +79,23 @@ public class DepartmentController {
 
     // 부서 다건 수정
     @PutMapping("/list")
+    public ResponseEntity<List<DepartmentResponse>> updateMany(@RequestBody List<DepartmentUpdateRequest> requests) {
+        List<DepartmentDto> dtoList = new ArrayList<>();
+        ModelMapper mapper = new ModelMapper();
+
+        requests.forEach(request ->
+                dtoList.add(mapper.map(request, DepartmentDto.class))
+        );
+
+        List<DepartmentDto> result = departmentService.updateMany(dtoList);
+        List<DepartmentResponse> response = new ArrayList<>();
+
+        result.forEach(dto ->
+                response.add(mapper.map(dto, DepartmentResponse.class))
+        );
+
+        return ResponseEntity.ok(response);
+    }
 
     // 부서 단건 삭제
     @DeleteMapping("/{deptId}")

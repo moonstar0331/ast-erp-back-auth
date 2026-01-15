@@ -50,4 +50,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         return selectOne(dto.getDeptId());
     }
+
+    @Override
+    @Transactional
+    public List<DepartmentDto> updateMany(List<DepartmentDto> dtoList) {
+        int result = departmentMapper.updateMany(dtoList);
+
+        if (result == 0 || result != dtoList.size()) {
+            throw new AuthServiceException(ErrorCode.DEPARTMENT_UPDATE_ERROR);
+        }
+
+        return dtoList;
+    }
 }
