@@ -1,4 +1,4 @@
-package com.api.ast.authservice.service;
+package com.api.ast.authservice.service.impl;
 
 import com.api.ast.authservice.dto.UserDto;
 import com.api.ast.authservice.entity.User;
@@ -7,7 +7,7 @@ import com.api.ast.authservice.exception.AuthServiceException;
 import com.api.ast.authservice.exception.ErrorCode;
 import com.api.ast.authservice.mapper.UserMapper;
 import com.api.ast.authservice.openfeign.ProfileServiceClient;
-import com.api.ast.authservice.openfeign.vo.reqeust.ProfileCreateReqeust;
+import com.api.ast.authservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;

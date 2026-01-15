@@ -1,4 +1,4 @@
-package com.api.ast.authservice.vo.response;
+package com.api.ast.authservice.vo.response.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

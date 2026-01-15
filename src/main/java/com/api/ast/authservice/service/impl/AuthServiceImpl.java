@@ -1,4 +1,4 @@
-package com.api.ast.authservice.service;
+package com.api.ast.authservice.service.impl;
 
 import com.api.ast.authservice.dto.TokenDto;
 import com.api.ast.authservice.entity.User;
@@ -7,6 +7,7 @@ import com.api.ast.authservice.exception.ErrorCode;
 import com.api.ast.authservice.jwt.TokenProvider;
 import com.api.ast.authservice.mapper.UserMapper;
 import com.api.ast.authservice.redis.RedisUtil;
+import com.api.ast.authservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

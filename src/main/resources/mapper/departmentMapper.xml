@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.api.ast.authservice.mapper.DepartmentMapper">
+
+    <insert id="insertOne" parameterType="com.api.ast.authservice.dto.department.DepartmentDto">
+        INSERT INTO department (
+            parent_dept_id,
+            dept_name,
+            dept_type_code,
+            use_yn,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{dto.parentDeptId},
+            #{dto.deptName},
+            #{dto.deptTypeCode},
+            #{dto.useYn},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <select id="selectOne" resultType="com.api.ast.authservice.dto.department.DepartmentDto">
+        SELECT
+            dept_id,
+            parent_dept_id,
+            dept_name,
+            dept_type_code,
+            use_yn,
+            created_at,
+            created_by,
+            updated_at,
+            updated_by,
+            deleted_yn
+        FROM department
+        WHERE dept_id = #{deptId}
+        AND deleted_yn = false
+    </select>
+
+    <select id="selectOne">
+        SELECT
+        dept_id,
+        parent_dept_id,
+        dept_name,
+        dept_type_code,
+        use_yn,
+        created_at,
+        created_by,
+        updated_at,
+        updated_by,
+        deleted_yn
+        FROM department
+        WHERE deleted_yn = false
+    </select>
+
+    <update id="updateOne">
+        UPDATE department
+        SET
+            parent_dept_id = #{dto.parentDeptId},
+            dept_name = #{dto.deptName},
+            dept_type_code = #{dto.deptTypeCode},
+            use_yn = #{dto.useYn},
+            updated_at = NOW(),
+            updated_by = #{dto.updatedBy},
+            deleted_yn = #{dto.deletedYn}
+        WHERE dept_id = #{dto.deptId}
+    </update>
+</mapper>
