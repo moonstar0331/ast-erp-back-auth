@@ -20,16 +20,12 @@ public interface UserMapper {
 
     int insert(@Param("user") User user);
 
-        int update(@Param("user") User user);
+    int update(@Param("user") User user);
 
-    
+    int deleteById(@Param("userId") Long userId);
 
-        int deleteById(@Param("userId") Long userId);
+    boolean existsByEmail(@Param("email") String email);
 
-    
-
-        int existsByEmail(@Param("email") String email);
-
-    }
+}
 
     

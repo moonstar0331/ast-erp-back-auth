@@ -41,7 +41,9 @@ mybatis:
 
 logging:
   level:
-    com.api.ast: INFO
+    com.api.ast: DEBUG
+    java.sql: DEBUG
+    org.apache.ibatis: DEBUG
 
 eureka:
   instance:

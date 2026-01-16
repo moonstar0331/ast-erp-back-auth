@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void join(UserDto userDto) {
-        if(userMapper.existsByEmail(userDto.getEmail()) > 0) {
+        if(userMapper.existsByEmail(userDto.getEmail())) {
             throw new AuthServiceException(ErrorCode.DUPLICATED_USER_EMAIL);
         }
 

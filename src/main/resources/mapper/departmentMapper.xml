@@ -40,7 +40,7 @@
         AND deleted_yn = false
     </select>
 
-    <select id="selectOne">
+    <select id="selectAll">
         SELECT
         dept_id,
         parent_dept_id,

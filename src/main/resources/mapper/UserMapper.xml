@@ -57,8 +57,13 @@
         UPDATE users SET deleted_yn = true, updated_at = NOW() WHERE user_id = #{userId}
     </update>
 
-    <select id="existsByEmail" resultType="int">
-        SELECT count(*) FROM users WHERE email = #{email} AND deleted_yn = false
+    <select id="existsByEmail" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM users
+            WHERE email = #{email}
+            AND deleted_yn = false
+        )
     </select>
 
 </mapper>
