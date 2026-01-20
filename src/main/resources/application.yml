@@ -19,7 +19,7 @@ spring:
       enabled: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres
+    url: jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres
     username: postgres.tktnwuhbmofbvroawxae
     password: "!Q@W#E$R%T6y"
   #    url: jdbc:postgresql://localhost:5432/ast
