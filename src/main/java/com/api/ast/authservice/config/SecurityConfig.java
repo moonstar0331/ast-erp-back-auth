@@ -48,9 +48,7 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/api/join"),
                                 new AntPathRequestMatcher("/api/login"),
                                 new AntPathRequestMatcher("/api/logout"),
-                                new AntPathRequestMatcher("/api/reissue"),
-                                new AntPathRequestMatcher("/api/login/github"),
-                                new AntPathRequestMatcher("/auth/github/callback")
+                                new AntPathRequestMatcher("/api/reissue")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
