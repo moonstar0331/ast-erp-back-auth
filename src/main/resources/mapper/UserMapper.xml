@@ -60,8 +60,6 @@
             ON d.parent_dept_id = pd.dept_id
         WHERE u.deleted_yn = false
         ORDER BY created_at DESC
-
-        SELECT * FROM users WHERE deleted_yn = false ORDER BY created_at DESC
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="user.userId" keyColumn="user_id">
