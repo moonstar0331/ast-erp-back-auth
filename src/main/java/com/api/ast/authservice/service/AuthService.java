@@ -4,11 +4,11 @@ import com.api.ast.authservice.dto.TokenDto;
 
 public interface AuthService {
 
-    TokenDto authorize(String email, String password);
+    TokenDto authorize(String loginId, String password);
 
     TokenDto reissue(String accessToken, String refreshToken);
 
     void logout(String accessToken, String refreshToken);
 
-    boolean validateCheck(String email, String userUuid);
+    boolean validateCheck(String loginId, String userUuid);
 }

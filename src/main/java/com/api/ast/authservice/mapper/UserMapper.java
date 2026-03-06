@@ -4,6 +4,7 @@ import com.api.ast.authservice.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,8 @@ import java.util.Optional;
 public interface UserMapper {
 
     Optional<User> findByUserUuid(@Param("userUuid") String userUuid);
+
+    Optional<User> findByLoginId(@Param("loginId") String loginId);
 
     Optional<User> findByEmail(@Param("email") String email);
 
@@ -26,6 +29,7 @@ public interface UserMapper {
 
     boolean existsByEmail(@Param("email") String email);
 
+    boolean existsByLoginId(@Param("loginId") String loginId);
 }
 
     

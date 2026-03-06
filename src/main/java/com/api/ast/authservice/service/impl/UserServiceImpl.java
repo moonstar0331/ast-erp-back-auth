@@ -29,11 +29,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void join(UserDto userDto) {
-        if(userMapper.existsByEmail(userDto.getEmail())) {
-            throw new AuthServiceException(ErrorCode.DUPLICATED_USER_EMAIL);
+        if(userMapper.existsByLoginId(userDto.getLoginId())) {
+            throw new AuthServiceException(ErrorCode.DUPLICATED_USER_LOGIN_ID);
         }
 
         User user = User.builder()
+                .loginId(userDto.getLoginId())
                 .email(userDto.getEmail())
                 .name(userDto.getName())
                 .password(passwordEncoder.encode(userDto.getPassword()))
@@ -54,6 +55,14 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByUserUuid(String userUuid) {
         User user = userMapper.findByUserUuid(userUuid).orElseThrow(() ->
             new AuthServiceException(ErrorCode.USER_NOT_FOUND));
+
+        return new ModelMapper().map(user, UserDto.class);
+    }
+
+    @Override
+    public UserDto getUserByLoginId(String loginId) {
+        User user = userMapper.findByLoginId(loginId).orElseThrow(() ->
+                new AuthServiceException(ErrorCode.USER_NOT_FOUND));
 
         return new ModelMapper().map(user, UserDto.class);
     }
@@ -82,8 +91,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void modifyUserinfo(String email, String userUuid, String nickname, String password) {
-        User user = userMapper.findByEmail(email).orElseThrow(() ->
+    public void modifyUserinfo(String loginId, String userUuid, String nickname, String password) {
+        User user = userMapper.findByLoginId(loginId).orElseThrow(() ->
                 new AuthServiceException(ErrorCode.USER_NOT_FOUND));
 
         if(!user.getUserUuid().equals(userUuid)) {
@@ -97,8 +106,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUser(String email, String userUuid) {
-        User user = userMapper.findByEmail(email).orElseThrow(() ->
+    public void deleteUser(String loginId, String userUuid) {
+        User user = userMapper.findByLoginId(loginId).orElseThrow(() ->
                 new AuthServiceException(ErrorCode.USER_NOT_FOUND));
 
         if(!user.getUserUuid().equals(userUuid)) {

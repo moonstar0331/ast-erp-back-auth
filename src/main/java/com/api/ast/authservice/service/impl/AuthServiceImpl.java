@@ -30,9 +30,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
 
     @Override
-    public TokenDto authorize(String email, String password) {
+    public TokenDto authorize(String loginId, String password) {
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(email, password);
+                new UsernamePasswordAuthenticationToken(loginId, password);
 
         Authentication authentication = authenticationManagerBuilder.getObject()
                 .authenticate(authenticationToken);
@@ -63,8 +63,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean validateCheck(String email, String userUuid) {
-        User user = userMapper.findByEmail(email).orElseThrow(() ->
+    public boolean validateCheck(String loginId, String userUuid) {
+        User user = userMapper.findByLoginId(loginId).orElseThrow(() ->
                 new AuthServiceException(ErrorCode.USER_NOT_FOUND));
 
         if (!user.getUserUuid().equals(userUuid)) {

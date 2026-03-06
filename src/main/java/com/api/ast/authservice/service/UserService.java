@@ -11,13 +11,15 @@ public interface UserService {
 
     UserDto getUserByUserUuid(String userUuid);
 
+    UserDto getUserByLoginId(String loginId);
+
     UserDto getUserByEmail(String email);
 
     List<UserDto> getUsers();
 
-    void modifyUserinfo(String email, String userUuid, String nickname, String password);
+    void modifyUserinfo(String loginId, String userUuid, String nickname, String password);
 
-    void deleteUser(String email, String userUuid);
+    void deleteUser(String loginId, String userUuid);
 
     User userUpdate(User user);
 }

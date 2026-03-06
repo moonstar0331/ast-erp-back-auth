@@ -16,6 +16,8 @@ public class User extends AuditingFields {
     @JsonIgnore
     private Long userId;
 
+    private String loginId;
+
     private String email;
 
     @JsonIgnore

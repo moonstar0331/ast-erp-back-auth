@@ -59,14 +59,14 @@ public class TokenProvider implements InitializingBean {
     }
 
     // Authorization 객체의 권한 정보를 이용해서 토큰을 생성하는 메소드
-    public TokenDto createToken(String email, String authorities) {
+    public TokenDto createToken(String loginId, String authorities) {
 
         long now = (new Date()).getTime();
-        User user = userMapper.findByEmail(email) // princial.toSTring()
+        User user = userMapper.findByLoginId(loginId) // princial.toSTring()
                 .orElseThrow(() -> new AuthServiceException(ErrorCode.USER_NOT_FOUND));
 
         String accessToken = Jwts.builder()
-                .claim("email", user.getEmail())
+                .claim("loginId", user.getLoginId())
                 .claim(AUTHORITIES_KEY, authorities)
                 .setSubject(user.getUserUuid())
                 .setExpiration(new Date(now + accessTokenValidityInMilliseconds))
@@ -75,7 +75,7 @@ public class TokenProvider implements InitializingBean {
 
         String refreshToken = Jwts.builder()
                 .claim(AUTHORITIES_KEY, authorities)
-                .claim("email", user.getEmail())
+                .claim("loginId", user.getLoginId())
                 .setExpiration(new Date(now + refreshTokenValidityInMilliseconds))
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
@@ -91,7 +91,7 @@ public class TokenProvider implements InitializingBean {
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
-        return new UsernamePasswordAuthenticationToken(claims.get("email"), null, authorities);
+        return new UsernamePasswordAuthenticationToken(claims.get("loginId"), null, authorities);
     }
 
     // 토큰의 유효성 검사

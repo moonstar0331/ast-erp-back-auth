@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
 
+    DUPLICATED_USER_LOGIN_ID(HttpStatus.CONFLICT, "User Login ID is duplicated"),
     DUPLICATED_USER_EMAIL(HttpStatus.CONFLICT, "User Email is duplicated"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "User not founded"),
     INVALID_USER_UUID(HttpStatus.UNAUTHORIZED, "User UUID is invalid"),

@@ -20,7 +20,7 @@ public class CustomDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userMapper.findByEmail(username)
+        return userMapper.findByLoginId(username)
                 .map(user -> createUser(username, user))
                 .orElseThrow(() -> new UsernameNotFoundException(username + "-> 데이터베이스에서 찾을 수 없습니다."));
     }
@@ -33,7 +33,7 @@ public class CustomDetailsService implements UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = List.of(new SimpleGrantedAuthority(user.getRole().toString()));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
+                user.getLoginId(),
                 user.getPassword(),
                 grantedAuthorities);
     }
