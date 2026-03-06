@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.api.ast.authservice.mapper.LoginHistoryMapper">
+
+    <insert id="insertLoginHistory" parameterType="com.api.ast.authservice.entity.LoginHistory" useGeneratedKeys="true" keyProperty="loginHistoryId">
+        INSERT INTO public.login_history (
+            user_id,
+            login_at,
+            logout_at,
+            login_success_yn,
+            login_ip,
+            user_agent,
+            login_type,
+            fail_reason,
+            session_id,
+            created_at
+        ) VALUES (
+            #{userId},
+            #{loginAt},
+            #{logoutAt},
+            #{loginSuccessYn},
+            #{loginIp},
+            #{userAgent},
+            #{loginType},
+            #{failReason},
+            #{sessionId},
+            #{createdAt}
+        )
+    </insert>
+
+</mapper>

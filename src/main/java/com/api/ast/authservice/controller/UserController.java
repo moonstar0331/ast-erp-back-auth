@@ -2,6 +2,9 @@ package com.api.ast.authservice.controller;
 
 import com.api.ast.authservice.dto.TokenDto;
 import com.api.ast.authservice.dto.UserDto;
+import com.api.ast.authservice.entity.LoginHistory;
+import com.api.ast.authservice.entity.User;
+import com.api.ast.authservice.mapper.UserMapper;
 import com.api.ast.authservice.service.AuthService;
 import com.api.ast.authservice.service.UserService;
 import com.api.ast.authservice.vo.request.user.UserJoinReqeust;
@@ -18,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +33,7 @@ public class UserController {
 
     private final UserService userService;
     private final AuthService authService;
+    private final UserMapper userMapper;
 
     @PostMapping("/join")
     public ResponseEntity<Void> signUp(@RequestBody UserJoinReqeust reqeust) {
@@ -38,25 +44,82 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenAndUserUuidResponse> login(@RequestBody UserLoginRequest request) {
-        TokenDto tokenDto = authService.authorize(request.getLoginId(), request.getPassword());
+    public ResponseEntity<TokenAndUserUuidResponse> login(@RequestBody UserLoginRequest request, HttpServletRequest servletRequest) {
+        String loginId = request.getLoginId();
+        String ip = getClientIp(servletRequest);
+        String userAgent = servletRequest.getHeader("User-Agent");
+        String sessionId = servletRequest.getSession().getId();
 
-        UserDto user = userService.getUserByLoginId(request.getLoginId());
+        Long userId = userMapper.findByLoginId(loginId)
+                .map(User::getUserId)
+                .orElse(null);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", tokenDto.getAccessToken());
-        headers.set("refreshToken", tokenDto.getRefreshToken());
-        headers.set("userUuid", user.getUserUuid());
+        try {
+            TokenDto tokenDto = authService.authorize(loginId, request.getPassword());
+            UserDto user = userService.getUserByLoginId(loginId);
 
-        TokenAndUserUuidResponse response = TokenAndUserUuidResponse.builder()
-                .accessToken(tokenDto.getAccessToken())
-                .refreshToken(tokenDto.getRefreshToken())
-                .userUuid(user.getUserUuid())
-                .build();
+            // 로그인 성공 이력 저장
+            authService.recordLoginHistory(LoginHistory.builder()
+                    .userId(userId)
+                    .loginAt(LocalDateTime.now())
+                    .loginSuccessYn("Y")
+                    .loginIp(ip)
+                    .userAgent(userAgent)
+                    .loginType("WEB") // 기본값 WEB
+                    .sessionId(sessionId)
+                    .createdAt(LocalDateTime.now())
+                    .build());
 
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(response);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", tokenDto.getAccessToken());
+            headers.set("refreshToken", tokenDto.getRefreshToken());
+            headers.set("userUuid", user.getUserUuid());
+
+            TokenAndUserUuidResponse response = TokenAndUserUuidResponse.builder()
+                    .accessToken(tokenDto.getAccessToken())
+                    .refreshToken(tokenDto.getRefreshToken())
+                    .userUuid(user.getUserUuid())
+                    .build();
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(response);
+
+        } catch (Exception e) {
+            // 로그인 실패 이력 저장
+            authService.recordLoginHistory(LoginHistory.builder()
+                    .userId(userId)
+                    .loginAt(LocalDateTime.now())
+                    .loginSuccessYn("N")
+                    .loginIp(ip)
+                    .userAgent(userAgent)
+                    .loginType("WEB")
+                    .failReason(e.getMessage())
+                    .sessionId(sessionId)
+                    .createdAt(LocalDateTime.now())
+                    .build());
+            throw e;
+        }
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
     }
 
     @GetMapping("/users/{userUuid}")

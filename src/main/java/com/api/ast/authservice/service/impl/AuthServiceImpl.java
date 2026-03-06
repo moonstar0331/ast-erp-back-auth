@@ -1,10 +1,12 @@
 package com.api.ast.authservice.service.impl;
 
 import com.api.ast.authservice.dto.TokenDto;
+import com.api.ast.authservice.entity.LoginHistory;
 import com.api.ast.authservice.entity.User;
 import com.api.ast.authservice.exception.AuthServiceException;
 import com.api.ast.authservice.exception.ErrorCode;
 import com.api.ast.authservice.jwt.TokenProvider;
+import com.api.ast.authservice.mapper.LoginHistoryMapper;
 import com.api.ast.authservice.mapper.UserMapper;
 import com.api.ast.authservice.redis.RedisUtil;
 import com.api.ast.authservice.service.AuthService;
@@ -16,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
@@ -28,6 +31,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisUtil redisUtil;
     private final UserMapper userMapper;
+    private final LoginHistoryMapper loginHistoryMapper;
 
     @Override
     public TokenDto authorize(String loginId, String password) {
@@ -41,6 +45,12 @@ public class AuthServiceImpl implements AuthService {
         String authorities = getAuthorities(authentication);
 
         return tokenProvider.createToken(authentication.getName(), authorities);
+    }
+
+    @Override
+    @Transactional
+    public void recordLoginHistory(LoginHistory loginHistory) {
+        loginHistoryMapper.insertLoginHistory(loginHistory);
     }
 
     @Override
