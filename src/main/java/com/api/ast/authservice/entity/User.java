@@ -23,7 +23,9 @@ public class User extends AuditingFields {
     @JsonIgnore
     private String password;
 
-    private String deptId;
+    private Long deptId;
+
+    private String deptName;
 
     private String name;
 

@@ -32,4 +32,8 @@ public class UserDto {
     private String password;
 
     private String userUuid;
+
+    private Long deptId;
+
+    private String deptName;
 }

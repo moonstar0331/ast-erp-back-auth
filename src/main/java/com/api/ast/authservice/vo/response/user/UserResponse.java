@@ -13,4 +13,6 @@ public class UserResponse {
     private String name;
     private String phone;
     private String userUuid;
+    private Long deptId;
+    private String deptName;
 }

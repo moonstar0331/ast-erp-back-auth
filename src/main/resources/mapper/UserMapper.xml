@@ -11,6 +11,7 @@
         <result property="email" column="email"/>
         <result property="password" column="password"/>
         <result property="deptId" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
         <result property="name" column="name"/>
         <result property="phone" column="phone"/>
         <result property="statusCode" column="status_code"/>
@@ -24,7 +25,16 @@
     </resultMap>
 
     <select id="findByUserUuid" resultMap="UserResultMap">
-        SELECT * FROM users WHERE user_uuid = #{userUuid} AND deleted_yn = false
+        SELECT
+            u.*,
+            concat_ws('-', pd.dept_name, d.dept_name) AS dept_name
+        FROM users u
+        LEFT JOIN department d
+            ON u.dept_id = d.dept_id
+        LEFT JOIN department pd
+            ON d.parent_dept_id = pd.dept_id
+        WHERE u.user_uuid = #{userUuid}
+            AND u.deleted_yn = false
     </select>
 
     <select id="findByLoginId" resultMap="UserResultMap">
