@@ -50,6 +50,17 @@
     </select>
 
     <select id="findAll" resultMap="UserResultMap">
+        SELECT
+            u.*,
+            concat_ws('-', pd.dept_name, d.dept_name) AS dept_name
+        FROM users u
+        LEFT JOIN department d
+            ON u.dept_id = d.dept_id
+        LEFT JOIN department pd
+            ON d.parent_dept_id = pd.dept_id
+        WHERE u.deleted_yn = false
+        ORDER BY created_at DESC
+
         SELECT * FROM users WHERE deleted_yn = false ORDER BY created_at DESC
     </select>
 
