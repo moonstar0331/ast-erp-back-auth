@@ -95,7 +95,7 @@
         SELECT EXISTS (
         SELECT 1
         FROM users
-        WHERE loginId = #{loginId}
+        WHERE login_id = #{loginId}
         AND deleted_yn = false
         )
     </select>
