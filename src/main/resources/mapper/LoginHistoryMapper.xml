@@ -5,7 +5,7 @@
 
     <insert id="insertLoginHistory" parameterType="com.api.ast.authservice.entity.LoginHistory" useGeneratedKeys="true" keyProperty="loginHistoryId">
         INSERT INTO public.login_history (
-            user_id,
+            user_uuid,
             login_at,
             logout_at,
             login_success_yn,
@@ -16,7 +16,7 @@
             session_id,
             created_at
         ) VALUES (
-            #{userId},
+            #{userUuid},
             #{loginAt},
             #{logoutAt},
             #{loginSuccessYn},
