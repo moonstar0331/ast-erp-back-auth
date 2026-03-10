@@ -50,8 +50,8 @@ public class UserController {
         String userAgent = servletRequest.getHeader("User-Agent");
         String sessionId = servletRequest.getSession().getId();
 
-        Long userId = userMapper.findByLoginId(loginId)
-                .map(User::getUserId)
+        String userUuid = userMapper.findByLoginId(loginId)
+                .map(User::getUserUuid)
                 .orElse(null);
 
         try {
@@ -60,7 +60,7 @@ public class UserController {
 
             // 로그인 성공 이력 저장
             authService.recordLoginHistory(LoginHistory.builder()
-                    .userId(userId)
+                    .userUuid(userUuid)
                     .loginAt(LocalDateTime.now())
                     .loginSuccessYn("Y")
                     .loginIp(ip)
@@ -88,7 +88,7 @@ public class UserController {
         } catch (Exception e) {
             // 로그인 실패 이력 저장
             authService.recordLoginHistory(LoginHistory.builder()
-                    .userId(userId)
+                    .userUuid(userUuid)
                     .loginAt(LocalDateTime.now())
                     .loginSuccessYn("N")
                     .loginIp(ip)

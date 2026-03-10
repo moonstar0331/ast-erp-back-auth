@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class LoginHistory {
 
     private Long loginHistoryId;
-    private Long userId;
+    private String userUuid;
     private LocalDateTime loginAt;
     private LocalDateTime logoutAt;
     private String loginSuccessYn;
